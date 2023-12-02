@@ -78,6 +78,23 @@ def read_input(file_name: str) -> list:
     return lines
 
 
+def part_1(lines: list) -> int:
+    total = 0
+    for line in lines:
+        game_id, results = extract_game(line)
+        if extract_colors(game_id, results):
+            total += game_id
+    return total
+
+
+def part_2(lines: list) -> int:
+    total = 0
+    for line in lines:
+        game_id, results = extract_game(line)
+        total += extract_colors_2(game_id, results)
+    return total
+
+
 def extract_game(line: str) -> tuple[int, list]:
     game_id = int(line.split(":")[0].replace("Game ", "").strip())
     results_line = line.split(":")[1].strip()
@@ -86,6 +103,22 @@ def extract_game(line: str) -> tuple[int, list]:
 
 
 def extract_colors(game_id: int, results: list):
+    game = Game(game_id)
+    for result in results:
+        colors = [color.strip() for color in result.split(",")]
+        for color in colors:
+            if "green" in color:
+                game.green = int(color.replace(" green", ""))
+            elif "red" in color:
+                game.red = int(color.replace(" red", ""))
+            elif "blue" in color:
+                game.blue = int(color.replace(" blue", ""))
+            if not game.check_if_possible(max_red=12, max_green=13, max_blue=14):
+                return False
+    return True
+
+
+def extract_colors_2(game_id: int, results: list):
     game = Game(game_id)
     for result in results:
         colors = [color.strip() for color in result.split(",")]
@@ -106,9 +139,6 @@ def extract_colors(game_id: int, results: list):
 
 
 if __name__ == "__main__":
-    input = read_input("input_day_2.txt")
-    total = 0
-    for line in input:
-        game_id, results = extract_game(line)
-        total += extract_colors(game_id, results)
-    print(f"{total=}")
+    input = read_input("./input_files/input_day_2.txt")
+    print(part_1(input))
+    print(part_2(input))
