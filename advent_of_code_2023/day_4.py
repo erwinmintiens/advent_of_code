@@ -77,15 +77,15 @@ class Card:
         self.id = id
         self.winning_numbers = winning_numbers
         self.your_numbers = your_numbers
-        self.number_of_winning_numbers = self.calculate_number_of_winning_numbers()
+        self.wins: int = self.calculate_wins()
 
     def calculate_points(self) -> int:
-        if not self.number_of_winning_numbers:
+        if not self.wins:
             return 0
-        points = pow(2, self.number_of_winning_numbers - 1)
+        points = pow(2, self.wins - 1)
         return points
 
-    def calculate_number_of_winning_numbers(self) -> int:
+    def calculate_wins(self) -> int:
         all_numbers = self.winning_numbers
         all_numbers.extend(self.your_numbers)
         all_numbers_set = set(all_numbers)
@@ -122,9 +122,9 @@ def part2():
     cards = [read_card_from_line(line) for line in lines]
     cards_copy = cards
     for card in cards:
-        if card.number_of_winning_numbers == 0:
+        if card.wins == 0:
             continue
-        for i in range(card.number_of_winning_numbers):
+        for i in range(card.wins):
             cards_copy.append(cards[card.id + i])
     print(len(cards_copy))
 
