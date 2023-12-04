@@ -71,8 +71,6 @@ Process all of the original and copied scratchcards until no more scratchcards a
 ANSWER: 5554894
 """
 
-import copy
-
 
 class Card:
     def __init__(self, id: int, winning_numbers: list, your_numbers: list) -> None:
