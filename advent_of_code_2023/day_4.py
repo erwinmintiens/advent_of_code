@@ -68,8 +68,10 @@ Once all of the originals and copies have been processed, you end up with 1 inst
 
 Process all of the original and copied scratchcards until no more scratchcards are won. Including the original set of scratchcards, how many total scratchcards do you end up with?
 
-ANSWER: 
+ANSWER: 5554894
 """
+
+import copy
 
 
 class Card:
@@ -77,15 +79,19 @@ class Card:
         self.id = id
         self.winning_numbers = winning_numbers
         self.your_numbers = your_numbers
+        self.number_of_winning_numbers = self.calculate_number_of_winning_numbers()
 
     def calculate_points(self) -> int:
+        if not self.number_of_winning_numbers:
+            return 0
+        points = pow(2, self.number_of_winning_numbers - 1)
+        return points
+
+    def calculate_number_of_winning_numbers(self) -> int:
         all_numbers = self.winning_numbers
         all_numbers.extend(self.your_numbers)
         all_numbers_set = set(all_numbers)
-        if len(all_numbers) == len(all_numbers_set):
-            return 0
-        points = pow(2, len(all_numbers) - len(all_numbers_set) - 1)
-        return points
+        return len(all_numbers) - len(all_numbers_set)
 
 
 def read_input(file_name: str) -> list:
@@ -116,7 +122,15 @@ def part1():
 def part2():
     lines = read_input("input_files/input_day_4.txt")
     cards = [read_card_from_line(line) for line in lines]
+    cards_copy = cards
+    for card in cards:
+        if card.number_of_winning_numbers == 0:
+            continue
+        for i in range(card.number_of_winning_numbers):
+            cards_copy.append(cards[card.id + i])
+    print(len(cards_copy))
 
 
 if __name__ == "__main__":
     part1()
+    part2()
